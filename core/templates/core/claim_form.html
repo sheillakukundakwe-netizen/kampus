@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-lg-8">
+        <div class="card shadow-sm rounded-4">
+            <div class="card-body p-5">
+                <h1 class="mb-4">Request claim for “{{ item.title }}”</h1>
+                <p class="text-muted mb-4">Send a short message to the reporter so they can verify you and coordinate secure pickup.</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-4">
+                        {{ form.message.label_tag }}
+                        {{ form.message }}
+                        {% for error in form.message.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit claim request</button>
+                    <a class="btn btn-link text-secondary" href="{% url 'core:item_detail' item.pk %}">Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

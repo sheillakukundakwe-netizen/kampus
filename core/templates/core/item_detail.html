@@ -1,0 +1,92 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center py-4">
+    <div class="col-xl-9">
+        <div class="card shadow-sm overflow-hidden border-0">
+            <div class="row g-0">
+                <div class="col-lg-7 bg-light p-5">
+                    <div class="mb-4">
+                        <h2 class="fw-bold">{{ item.title }}</h2>
+                        <p class="text-muted mb-0">Reported {{ item.reported_at|date:'M d, Y H:i' }}</p>
+                    </div>
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <span class="badge bg-{{ item.badge_class }} rounded-pill py-2 px-3 fs-6">{{ item.get_status_display }}</span>
+                        <span class="text-muted">{{ item.location|default:'Unknown location' }}</span>
+                    </div>
+                    <div class="mb-4">
+                        <h5 class="mb-2">Item description</h5>
+                        <p class="text-muted">{{ item.description|default:'No description provided.' }}</p>
+                    </div>
+                    <div class="mb-4">
+                        <h5 class="mb-2">Reporter</h5>
+                        <p class="text-muted">{{ item.reporter_name }}</p>
+                        {% if item.reporter and item.reporter.profile.verified %}
+                            <span class="badge bg-success">{{ item.reporter.profile.badge_label }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="mb-4">
+                        <h5 class="mb-2">Contact information</h5>
+                        <p class="text-muted">{{ item.contact_info }}</p>
+                    </div>
+                    {% if item.is_resolved and item.claimed_by %}
+                        <div class="alert alert-success">
+                            This item has been claimed by {{ item.claimed_by.get_full_name|default:item.claimed_by.email }} on {{ item.claimed_at|date:'M d, Y' }}.
+                        </div>
+                    {% endif %}
+
+                    {% if user.is_authenticated %}
+                        {% if claim_form %}
+                            <a class="btn btn-warning btn-lg" href="{% url 'core:claim_item' item.pk %}">Request claim</a>
+                        {% elif existing_claim %}
+                            <div class="alert alert-info">Your claim request is pending review.</div>
+                        {% endif %}
+
+                        {% if pending_requests %}
+                            <div class="mt-4">
+                                <h5 class="mb-3">Pending claim requests</h5>
+                                {% for request in pending_requests %}
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <p class="mb-2"><strong>{{ request.requester.get_full_name|default:request.requester.email }}</strong> wants to claim this item.</p>
+                                            {% if request.message %}
+                                                <p class="text-muted">{{ request.message }}</p>
+                                            {% endif %}
+                                            <form method="post" action="{% url 'core:respond_claim_request' request.pk %}">
+                                                {% csrf_token %}
+                                                <button name="action" value="accept" class="btn btn-success btn-sm me-2">Accept</button>
+                                                <button name="action" value="decline" class="btn btn-outline-secondary btn-sm">Decline</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="alert alert-secondary">Log in to request a claim or manage your reports.</div>
+                    {% endif %}
+
+                    <div class="d-flex flex-wrap gap-3">
+                        <a class="btn btn-primary btn-lg" href="{% url 'core:report_lost' %}">Report Lost</a>
+                        <a class="btn btn-outline-secondary btn-lg" href="{% url 'core:report_found' %}">Report Found</a>
+                    </div>
+                </div>
+                <div class="col-lg-5 p-5 bg-gradient-card text-white d-flex flex-column justify-content-center">
+                    <div>
+                        <h4 class="fw-bold">Campus recovery support</h4>
+                        <p class="mb-4 text-white-75">Reach out quickly and keep campus security informed. Every report helps reunite the right owner with their belongings.</p>
+                        <ul class="list-unstyled text-white-75">
+                            <li class="mb-3">• Verified campus community reporting</li>
+                            <li class="mb-3">• Fast action for urgent items</li>
+                            <li>• Clear contact details for direct follow-up</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-end mt-4">
+            <a class="btn btn-link text-secondary" href="{% url 'core:home' %}">← Back to dashboard</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

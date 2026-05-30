@@ -1,0 +1,32 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-6">
+        <div class="card shadow-sm rounded-4">
+            <div class="card-body p-5">
+                <h1 class="mb-4">Campus login</h1>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        {{ form.username.label_tag }}
+                        {{ form.username }}
+                    </div>
+                    <div class="mb-3 password-toggle">
+                        {{ form.password.label_tag }}
+                        <div class="input-group">
+                            {{ form.password }}
+                            <button type="button" class="btn btn-outline-secondary" data-password-toggle="true">Show</button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Sign in</button>
+                </form>
+                <div class="mt-4 text-center">
+                    <p class="mb-1">Need an account?</p>
+                    <a href="{% url 'core:register' %}">Register with campus email</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

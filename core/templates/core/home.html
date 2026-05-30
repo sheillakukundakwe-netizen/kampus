@@ -1,0 +1,103 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="row g-4 align-items-center mb-4">
+    <div class="col-lg-7">
+        <div class="dashboard-hero p-5 rounded-4 shadow-sm bg-white border-top border-4 border-warning">
+            <h1 class="display-5 fw-bold">Get the right item back to its owner.</h1>
+            <p class="text-muted mb-4">Track, review, and update all reported lost and found items at Makerere Jinja Campus from one clean dashboard.</p>
+            <div class="d-flex flex-wrap gap-3">
+                <a class="btn btn-primary btn-lg" href="{% url 'core:report_lost' %}">Report Lost</a>
+                <a class="btn btn-outline-primary btn-lg" href="{% url 'core:report_found' %}">Report Found</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="row g-3">
+            <div class="col-sm-6">
+                <div class="metric-card p-4 rounded-4 shadow-sm h-100">
+                    <small class="text-uppercase text-muted">Total reports</small>
+                    <h3 class="mt-2 mb-0">{{ items.count }}</h3>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="metric-card p-4 rounded-4 shadow-sm h-100">
+                    <small class="text-uppercase text-muted">Campus trust</small>
+                    <h3 class="mt-2 mb-0">Trusted by students</h3>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="metric-card p-4 rounded-4 shadow-sm h-100">
+                    <small class="text-uppercase text-muted">Fast response</small>
+                    <h3 class="mt-2 mb-0">24h average match</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-4">
+        <div class="card p-4 rounded-4 shadow-sm bg-white border-left-warning border-start">
+            <div class="mb-3">
+                <small class="text-uppercase text-muted">Found now</small>
+                <h3 class="mt-2">{{ items|length }}</h3>
+            </div>
+            <p class="text-muted mb-0">Keep track of the latest active reports in a single fast view.</p>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="card shadow-sm rounded-4 overflow-hidden">
+            <div class="card-body p-4">
+                <form method="get" class="row g-3 align-items-end">
+                    <div class="col-md-6">
+                        <label class="form-label" for="search">Search reports</label>
+                        <input id="search" name="q" type="search" class="form-control" placeholder="Search title, description, location" value="{{ query }}" />
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label" for="status">Status</label>
+                        <select id="status" name="status" class="form-select">
+                            <option value="">All reports</option>
+                            <option value="lost" {% if filter_status == 'lost' %}selected{% endif %}>Lost only</option>
+                            <option value="found" {% if filter_status == 'found' %}selected{% endif %}>Found only</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if items.exists %}
+<div class="row g-4">
+    {% for item in items %}
+    <div class="col-lg-6">
+        <div class="card h-100 shadow-sm border-0 rounded-4 overflow-hidden">
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h5 class="card-title mb-1">{{ item.title }}</h5>
+                        <p class="text-muted mb-2">{{ item.location|default:'Unknown location' }}</p>
+                    </div>
+                    <span class="badge bg-{{ item.badge_class }} fs-6">{{ item.get_status_display }}</span>
+                </div>
+                <p class="card-text text-muted mb-4">{{ item.description|default:'No description provided.' }}</p>
+                <div class="d-flex flex-wrap gap-3 text-muted small">
+                    <span><strong>Reported:</strong> {{ item.reported_at|date:'M d, Y H:i' }}</span>
+                    <span><strong>Contact:</strong> {{ item.contact_info }}</span>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-top-0 pt-0 pb-4 px-4">
+                <a class="btn btn-sm btn-outline-primary" href="{% url 'core:item_detail' item.pk %}">View details</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info rounded-4 shadow-sm">No matching reports found. Try changing your search or report a new item.</div>
+{% endif %}
+{% endblock %}

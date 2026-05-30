@@ -1,0 +1,52 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center report-page">
+    <div class="col-xl-9">
+        <div class="card report-card shadow-lg border-0 overflow-hidden">
+            <div class="row g-0">
+                <div class="col-md-5 bg-gradient-card p-5 text-white d-flex flex-column justify-content-center position-relative overflow-hidden">
+                    <div class="report-side-shape"></div>
+                    <div class="position-relative">
+                        <h2 class="fw-bold display-6">Report {{ status|title }} Item</h2>
+                        <p class="text-white-75 lead">A fast, secure report helps campus staff and peers recover the item sooner.</p>
+                        <div class="mt-5">
+                            <div class="mb-4">
+                                <strong>Why this matters</strong>
+                                <p class="text-white-75 mb-0">Clear reports lead to quicker matches and fewer losses across the Jinja campus.</p>
+                            </div>
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="badge bg-warning text-dark">Campus safe</span>
+                                <span class="badge bg-white text-dark">Fast recovery</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7 p-5 bg-white">
+                    <div class="report-form-body">
+                        <form method="post" novalidate>
+                            {% csrf_token %}
+                            {% for field in form %}
+                                <div class="mb-4">
+                                    <label class="form-label fw-semibold" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    {{ field }}
+                                    {% if field.help_text %}
+                                        <div class="form-text">{{ field.help_text }}</div>
+                                    {% endif %}
+                                    {% for error in field.errors %}
+                                        <div class="text-danger small mt-1">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                            <div class="d-flex flex-wrap gap-3 align-items-center">
+                                <button type="submit" class="btn btn-primary btn-lg">Submit report</button>
+                                <a class="text-muted text-decoration-none" href="{% url 'core:home' %}">Back to dashboard</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

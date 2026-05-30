@@ -1,0 +1,144 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<section class="hero text-white position-relative overflow-hidden">
+  <div class="hero-spark"></div>
+  <div class="container py-5">
+    <div class="row align-items-center gy-5">
+      <div class="col-lg-6">
+        <span class="eyebrow">Makerere Jinja Campus exclusive</span>
+        <h1 class="display-4 fw-bold">Your campus lost & found experience, redesigned for Jinja.</h1>
+        <p class="lead text-white-75">A fast, human-centered portal that helps students, staff, and campus security reunite lost belongings with confidence.</p>
+        <div class="mt-4 d-flex flex-wrap gap-3 align-items-center">
+          <a class="btn btn-lg btn-primary" href="{% url 'core:report_lost' %}">Report Lost</a>
+          <a class="btn btn-lg btn-outline-light" href="{% url 'core:report_found' %}">Report Found</a>
+          <a class="btn btn-lg btn-secondary" href="#mission">Explore the system</a>
+        </div>
+        <div class="mt-5 d-flex flex-wrap gap-3 hero-pill-group">
+          <div class="hero-pill">95% campus response rate</div>
+          <div class="hero-pill">Quick matches within 24 hours</div>
+          <div class="hero-pill">Secure student-first reporting</div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="hero-card p-4 shadow-xl">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+              <span class="badge bg-light text-dark fw-bold">Live campus data</span>
+              <h5 class="mt-3 mb-1">Jinja campus lost & found</h5>
+              <p class="text-muted mb-0">Latest reports and community activity in one polished view.</p>
+            </div>
+            <span class="badge bg-warning text-dark">Jinja</span>
+          </div>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <div class="stat-card py-4 px-3 text-center">
+                <div class="stat-value">{{ lost_count }}</div>
+                <div class="stat-label">Lost reports</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="stat-card py-4 px-3 text-center">
+                <div class="stat-value">{{ found_count }}</div>
+                <div class="stat-label">Found items</div>
+              </div>
+            </div>
+          </div>
+          <div class="recent-activity">
+            <h6 class="mb-3">Recent campus reports</h6>
+            <ul class="list-unstyled mb-0">
+              {% for item in recent %}
+                <li class="recent-item mb-3">
+                  <a href="{% url 'core:item_detail' item.pk %}">{{ item.title }}</a>
+                  <div class="small text-muted">{{ item.get_status_display }} · {{ item.location }}</div>
+                </li>
+              {% empty %}
+                <li class="text-muted">No recent reports yet.</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mission-section py-5 bg-light" id="mission">
+  <div class="container">
+    <div class="row align-items-center gy-4">
+      <div class="col-lg-5">
+        <p class="section-tag text-uppercase">Why Jinja students love it</p>
+        <h2 class="section-title">A better lost & found experience with real campus energy.</h2>
+        <p class="text-muted">Built for the unique pace of Makerere Jinja Campus, this portal blends clarity, speed, and trust for every report.</p>
+      </div>
+      <div class="col-lg-7">
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="feature-card p-4 h-100">
+              <h5>Instant reporting</h5>
+              <p class="text-muted">Submit a report in seconds and keep the campus community updated immediately.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-4 h-100">
+              <h5>Campus-wide visibility</h5>
+              <p class="text-muted">Lost and found updates are easy to browse for every student, staff member, and security officer.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-4 h-100">
+              <h5>Smart matching</h5>
+              <p class="text-muted">Match items with owners faster by using location, description and status together.</p>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="feature-card p-4 h-100">
+              <h5>Secure contact design</h5>
+              <p class="text-muted">Only the necessary contact details are shared to make connections safe and simple.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-banner py-5">
+  <div class="container">
+    <div class="row align-items-center justify-content-between">
+      <div class="col-md-7">
+        <h2 class="fw-bold mb-3">Make lost and found effortless for every Jinja campus member.</h2>
+        <p class="text-muted mb-0">Launch your next report and start closing the loop on lost belongings across the campus.</p>
+      </div>
+      <div class="col-md-4 text-md-end mt-4 mt-md-0">
+        <a class="btn btn-lg btn-primary" href="{% url 'core:report_lost' %}">Create a report</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer bg-dark text-white py-5">
+  <div class="container">
+    <div class="row gy-4">
+      <div class="col-md-6">
+        <h5 class="text-white">Makerere University Jinja Campus</h5>
+        <p class="text-muted">Lost & Found portal for students, staff and campus visitors.</p>
+      </div>
+      <div class="col-md-3">
+        <h6 class="text-white">Quick links</h6>
+        <ul class="list-unstyled text-muted">
+          <li><a class="footer-link" href="{% url 'core:report_lost' %}">Report Lost</a></li>
+          <li><a class="footer-link" href="{% url 'core:report_found' %}">Report Found</a></li>
+          <li><a class="footer-link" href="{% url 'core:home' %}">Browse reports</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3">
+        <h6 class="text-white">Contact</h6>
+        <p class="text-muted small mb-1">security@makerere.ac.ug</p>
+        <p class="text-muted small">Jinja Campus, Bell Avenue</p>
+      </div>
+    </div>
+    <div class="text-center mt-4 text-muted small">© Makerere University Jinja Campus — Lost & Found</div>
+  </div>
+</footer>
+{% endblock %}

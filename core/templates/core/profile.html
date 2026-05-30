@@ -1,0 +1,80 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-xl-9">
+        <div class="card shadow-sm rounded-4">
+            <div class="card-body p-5">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mb-5">
+                    <div>
+                        <h1 class="mb-2">{{ request.user.get_full_name|default:request.user.email }}</h1>
+                        <p class="text-muted mb-0">{{ profile.badge_label }} • Member since {{ profile.created_at|date:'M d, Y' }}</p>
+                    </div>
+                    <div class="text-end">
+                        <h2 class="display-6 mb-1">{{ profile.reputation }}</h2>
+                        <small class="text-muted">Reputation points</small>
+                    </div>
+                </div>
+
+                <div class="row g-4 mb-5">
+                    <div class="col-md-6">
+                        <div class="card rounded-4 p-4 h-100">
+                            <h5 class="mb-3">Reports submitted</h5>
+                            <p class="display-6 mb-0">{{ reports.count }}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card rounded-4 p-4 h-100">
+                            <h5 class="mb-3">Claim requests</h5>
+                            <p class="display-6 mb-0">{{ requests.count }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-5">
+                    <h3 class="mb-4">My reports</h3>
+                    {% if reports %}
+                        <div class="list-group">
+                            {% for item in reports %}
+                                <a href="{% url 'core:item_detail' item.pk %}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>{{ item.title }}</strong>
+                                        <div class="small text-muted">{{ item.get_status_display }} • {{ item.location|default:'Unknown location' }}</div>
+                                    </div>
+                                    <span class="badge bg-{{ item.badge_class }} rounded-pill">{{ item.get_status_display }}</span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">You have not submitted any reports yet.</div>
+                    {% endif %}
+                </div>
+
+                <div>
+                    <h3 class="mb-4">My claim requests</h3>
+                    {% if requests %}
+                        <div class="list-group">
+                            {% for request in requests %}
+                                <div class="list-group-item rounded-4">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <strong>{{ request.item.title }}</strong>
+                                            <div class="small text-muted">Status: {{ request.get_status_display }}</div>
+                                        </div>
+                                        <span class="badge bg-secondary rounded-pill">{{ request.get_status_display }}</span>
+                                    </div>
+                                    {% if request.message %}
+                                        <p class="mb-0 text-muted mt-2">{{ request.message }}</p>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">You have not requested any claims yet.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
