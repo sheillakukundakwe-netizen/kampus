@@ -25,8 +25,8 @@ SECRET_KEY = 'django-insecure-68mtz09+hl57^k$_e8j7gf74pmkj^0yv@8_v*m4%-v90ft*c9m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-ALLOWED_EMAIL_DOMAINS = ['makerere.ac.ug', 'gmail.com' 'student.mak.ac.ug']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.vercel.app']
+ALLOWED_EMAIL_DOMAINS = ['makerere.ac.ug', 'gmail.com', 'student.mak.ac.ug']
 
 
 # Application definition

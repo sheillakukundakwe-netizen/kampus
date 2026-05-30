@@ -1,1 +1,2 @@
 Django==6.0.5
+werkzeug==3.0.1
