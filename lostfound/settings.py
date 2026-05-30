@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-68mtz09+hl57^k$_e8j7gf74pmkj^0yv@8_v*m4%-v90ft*c9m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.vercel.app']
 ALLOWED_EMAIL_DOMAINS = ['makerere.ac.ug', 'gmail.com', 'student.mak.ac.ug']
@@ -74,10 +75,17 @@ WSGI_APPLICATION = 'lostfound.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
+sqlite_db_path = os.environ.get('SQLITE_DB_PATH')
+if sqlite_db_path:
+    db_name = sqlite_db_path
+else:
+    is_vercel = bool(os.environ.get('VERCEL') or os.environ.get('VERCEL_ENV') or BASE_DIR == Path('/var/task'))
+    db_name = '/tmp/db.sqlite3' if is_vercel else BASE_DIR / 'db.sqlite3'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': db_name,
     }
 }
 
